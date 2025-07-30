@@ -22,12 +22,6 @@ services:
       POSTGRES_USER: stat_user
       POSTGRES_PASSWORD: stat_password
       POSTGRES_DB: ewm_stats_db
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -p 5432" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
 
   ewm-service:
     build: ./main-service
