@@ -30,9 +30,9 @@ services:
       retries: 5
       start_period: 10s
 
-  ewm-service:
-    ports:
-      - "8080:8080"
-
-  ewm-db:
-    image: postgres:16.1
+ # ewm-service:
+ #   ports:
+ #     - "8080:8080"
+ #
+ # ewm-db:
+ #   image: postgres:16.1
