@@ -1,6 +1,6 @@
 services:
   stat-server:
-    build: stat/stat-server
+    build: stats/stats-server
     container_name: ewm-stats-server-compose
     depends_on:
       stats-db:
