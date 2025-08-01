@@ -53,15 +53,17 @@ public class StatsClientImpl implements StatsClient {
     }
 
     @Override
-    public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        log.info("Запрос статистики:");
+    public List<ViewStatsDto> getStats(String start, String end, List<String> uris, Boolean unique) {
+        log.info("Запрос статистики с параметрами start={}, end={}, uris={}, unique={}", start, end, uris, unique);
+
+        LocalDateTime.parse(start, DATE_TIME_FORMATTER);
+        LocalDateTime.parse(end, DATE_TIME_FORMATTER);
+
         List<ViewStatsDto> stats = restClient.get()
                 .uri(uriBuilder -> {
                     uriBuilder.path("/stats")
-                            .queryParam("start", start
-                                    .format(DATE_TIME_FORMATTER))
-                            .queryParam("end", end
-                                    .format(DATE_TIME_FORMATTER));
+                            .queryParam("start", start)
+                            .queryParam("end", end);
                     if (uris != null && !uris.isEmpty()) {
                         for (String uri : uris) {
                             uriBuilder.queryParam("uris", uri);
