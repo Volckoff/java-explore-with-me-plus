@@ -3,7 +3,6 @@ package ru.practicum.client;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface StatsClient {
