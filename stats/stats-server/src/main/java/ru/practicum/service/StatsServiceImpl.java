@@ -25,14 +25,14 @@ public class StatsServiceImpl implements StatsService {
     @Transactional
     @Override
     public void save(EndpointHitDto endpointHitDto) {
-        log.debug("Service: Attempting to save hit: {}", endpointHitDto);
+        log.debug("Попытка сохранить просмотр: {}", endpointHitDto);
         if (endpointHitDto == null) {
-            log.warn("Service: Cannot save hit, input EndpointHitDto was null.");
-            throw new IllegalArgumentException("Input EndpointHitDto cannot be null.");
+            log.warn("Невозможно сохранить просмотр — параметр EndpointHitDto равен null.");
+            throw new IllegalArgumentException("Параметр EndpointHitDto не может быть null.");
         }
         EndpointHit endpointHit = StatsMapper.toEntity(endpointHitDto);
         statsRepository.save(endpointHit);
-        log.info("Service: Hit saved successfully for app: {}, uri: {}", endpointHit.getApp(), endpointHit.getUri());
+        log.info("Просмотр успешно сохранен");
     }
 
     @Override
