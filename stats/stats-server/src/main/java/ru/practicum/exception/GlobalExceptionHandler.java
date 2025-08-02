@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleGenericException(Exception e) {
-        log.error("Необработанная ошибка: ", e); // полный стек-трейс
+        log.error("Необработанная ошибка: ", e);
         return new ErrorResponse(
                 "INTERNAL_SERVER_ERROR",
                 "Внутренняя ошибка сервера.",

@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Table(name = "endpoint_hits")
 @Getter
 @Setter
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
