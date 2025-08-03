@@ -10,7 +10,6 @@ import ru.practicum.model.User;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-
     User toUser(UserDto userDto);
 
     UserDto toUserDto(User user);
@@ -19,5 +18,4 @@ public interface UserMapper {
     User toUser(NewUserRequestDto newUserDto);
 
     UserShortDto toShortDto(User user);
-
 }
