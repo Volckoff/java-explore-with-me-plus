@@ -39,7 +39,7 @@ public class NewEventDto {
     Boolean paid = false;
 
     @Builder.Default
-    @PositiveOrZero(message = "Participant limit must be positive or zero")
+    @PositiveOrZero(message = "Лимит участников должен быть положительным числом или нулём")
     Long participantLimit = 0L;
 
     @Builder.Default

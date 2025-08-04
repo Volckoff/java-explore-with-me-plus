@@ -17,30 +17,30 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateEventUserRequestDto {
 
-    @Size(min = 20, max = 2000, message = "Annotation length must be between 20 and 2000 characters")
+    @Size(min = 20, max = 2000, message = "Длина аннотации должна быть от 20 до 2000 символов")
     String annotation;
 
     Long category;
 
-    @Size(min = 20, max = 7000, message = "Description length must be between 20 and 7000 characters")
+    @Size(min = 20, max = 7000, message = "Описание должно быть длиной от 20 до 7000 символов")
     String description;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @Future(message = "Event date must be in the future")
+    @Future(message = "Дата события должна быть в будущем")
     LocalDateTime eventDate;
 
     Location location;
 
     Boolean paid;
 
-    @PositiveOrZero(message = "Participant limit must be positive or zero")
+    @PositiveOrZero(message = "Лимит участников должен быть положительным числом или нулём")
     Integer participantLimit;
 
     Boolean requestModeration;
 
     StateActionUser stateAction;
 
-    @Size(min = 3, max = 120, message = "Title length must be between 3 and 120 characters")
+    @Size(min = 3, max = 120, message = "Название должно быть длиной от 3 до 120 символов")
     String title;
 
     public enum StateActionUser {
