@@ -7,6 +7,7 @@ public class DeletedException extends RuntimeException {
     }
 
     public DeletedException(String entityName, String fieldName, Object value) {
-        super(String.format("Entity restriction of removal %s with %s = '%s' - not empty", entityName, fieldName, value));
+        super(String.format("Нельзя удалить %s с %s = '%s' потому что связанные данные не пусты",
+                entityName, fieldName, value));
     }
 }
