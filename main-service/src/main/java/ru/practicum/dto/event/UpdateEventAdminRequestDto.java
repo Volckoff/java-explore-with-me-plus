@@ -6,7 +6,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.model.Location;
 
 import java.time.LocalDateTime;
 
@@ -29,7 +28,7 @@ public class UpdateEventAdminRequestDto {
     @Future(message = "ата события должна быть в будущем")
     LocalDateTime eventDate;
 
-    Location location;
+    LocationDto location;
 
     Boolean paid;
 

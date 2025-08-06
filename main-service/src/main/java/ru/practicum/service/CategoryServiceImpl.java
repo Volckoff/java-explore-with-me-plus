@@ -25,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-    private final EventRepository eventRepository;
+//    private final EventRepository eventRepository;
 
     @Override
     @Transactional
@@ -44,11 +44,11 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryRepository.findById(categoryId).isEmpty()) {
             throw new NotFoundException("Category", "Id", categoryId);
         }
-        if (eventRepository.existsByCategoryId(categoryId)) {
-            throw new DeletedException("Category", "name", categoryId);
-        } else {
-            categoryRepository.deleteById(categoryId);
-        }
+//        if (eventRepository.existsByCategoryId(categoryId)) {
+//            throw new DeletedException("Category", "name", categoryId);
+//        } else {
+//            categoryRepository.deleteById(categoryId);
+//        }
     }
 
     @Override
