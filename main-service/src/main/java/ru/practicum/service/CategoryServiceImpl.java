@@ -14,6 +14,7 @@ import ru.practicum.exception.NotFoundException;
 import ru.practicum.mapper.CategoryMapper;
 import ru.practicum.model.Category;
 import ru.practicum.repository.CategoryRepository;
+import ru.practicum.repository.EventRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-//    private final EventRepository eventRepository;
+    private final EventRepository eventRepository;
 
     @Override
     @Transactional
@@ -44,11 +45,11 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryRepository.findById(categoryId).isEmpty()) {
             throw new NotFoundException("Category", "Id", categoryId);
         }
-//        if (eventRepository.existsByCategoryId(categoryId)) {
-//            throw new DeletedException("Category", "name", categoryId);
-//        } else {
-//            categoryRepository.deleteById(categoryId);
-//        }
+        if (eventRepository.existsByCategoryId(categoryId)) {
+            throw new DeletedException("Category", "name", categoryId);
+        } else {
+            categoryRepository.deleteById(categoryId);
+        }
     }
 
     @Override
