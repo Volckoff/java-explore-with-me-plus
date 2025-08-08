@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateEventUserRequestDto {
+public class UpdateEventAdminRequest {
 
     @Size(min = 20, max = 2000, message = "Длина аннотации должна быть от 20 до 2000 символов")
     String annotation;
@@ -37,13 +37,13 @@ public class UpdateEventUserRequestDto {
 
     Boolean requestModeration;
 
-    StateActionUser stateAction;
+    StateActionAdmin stateAction;
 
     @Size(min = 3, max = 120, message = "Название должно быть длиной от 3 до 120 символов")
     String title;
 
-    public enum StateActionUser {
-        SEND_TO_REVIEW,
-        CANCEL_REVIEW
+    public enum StateActionAdmin {
+        PUBLISH_EVENT,
+        REJECT_EVENT
     }
 }

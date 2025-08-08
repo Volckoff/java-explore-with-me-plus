@@ -31,7 +31,7 @@ public class EventFullDto {
     UserShortDto initiator;
     LocationDto location;
     boolean paid;
-    int participantLimit;
+    Integer participantLimit;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime publishedOn;

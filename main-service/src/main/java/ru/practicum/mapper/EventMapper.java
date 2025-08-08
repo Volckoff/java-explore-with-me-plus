@@ -1,10 +1,7 @@
 package ru.practicum.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import ru.practicum.dto.event.EventFullDto;
-import ru.practicum.dto.event.EventShortDto;
-import ru.practicum.dto.event.NewEventDto;
+import org.mapstruct.*;
+import ru.practicum.dto.event.*;
 import ru.practicum.model.Category;
 import ru.practicum.model.Event;
 import ru.practicum.model.Location;
@@ -26,8 +23,29 @@ public interface EventMapper {
     @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "views", constant = "0L")
     @Mapping(target = "category", source = "category")
-
     Event toEvent(NewEventDto newEventDto, User initiator, Category category, Location location);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "location", ignore = true)
+    @Mapping(target = "state", ignore = true)
+    @Mapping(target = "publishedOn", ignore = true)
+    @Mapping(target = "createdOn", ignore = true)
+    @Mapping(target = "initiator", ignore = true)
+    @Mapping(target = "views", ignore = true)
+    @Mapping(target = "confirmedRequests", ignore = true)
+    void patchFromUser(UpdateEventUserRequest src, @MappingTarget Event event);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "location", ignore = true)
+    @Mapping(target = "state", ignore = true)
+    @Mapping(target = "publishedOn", ignore = true)
+    @Mapping(target = "createdOn", ignore = true)
+    @Mapping(target = "initiator", ignore = true)
+    @Mapping(target = "views", ignore = true)
+    @Mapping(target = "confirmedRequests", ignore = true)
+    void patchFromAdmin(UpdateEventAdminRequest src, @MappingTarget Event event);
 
     default LocalDateTime mapNow() {
         return LocalDateTime.now();
