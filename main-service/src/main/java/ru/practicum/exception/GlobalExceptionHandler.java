@@ -50,11 +50,22 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(ConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handleConflictException(ConflictException e) {
+        log.warn("Конфликт: {}", e.getMessage());
+        return new ApiError(
+                "CONFLICT",
+                "Нарушение бизнес-логики.",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleValidationException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        log.warn("Ошибка валидации: {}", message);
         return new ApiError(
                 "BAD_REQUEST",
                 "Переданы некорректные данные.",
@@ -66,7 +77,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiError handleException(Exception e) {
-        log.error("Внутренняя ошибка сервера", e); // Логируем стек-трейс
+        log.error("Внутренняя ошибка сервера", e);
         return new ApiError(
                 "INTERNAL_ERROR",
                 "Внутренняя ошибка сервера.",

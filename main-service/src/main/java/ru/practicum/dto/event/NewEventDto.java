@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.model.Location;
 
 import java.time.LocalDateTime;
 
@@ -33,7 +32,7 @@ public class NewEventDto {
     LocalDateTime eventDate;
 
     @NotNull(message = "Поле location не может быть пустым")
-    Location location;
+    LocationDto location;
 
     @Builder.Default
     Boolean paid = false;

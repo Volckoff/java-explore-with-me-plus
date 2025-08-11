@@ -1,17 +1,19 @@
-package ru.practicum.model;
+package ru.practicum.dto.event;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Embeddable
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Location {
+public class LocationDto {
+
+    @NotNull
     Float lat;
+
+    @NotNull
     Float lon;
 }
