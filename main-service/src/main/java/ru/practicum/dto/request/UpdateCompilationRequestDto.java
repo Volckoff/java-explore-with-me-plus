@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateCompilationRequest {
+public class UpdateCompilationRequestDto {
 
     Boolean pinned;
     @Size(min = 1, max = 50, message = "Название подборки должно быть от 1 до 50 символов")

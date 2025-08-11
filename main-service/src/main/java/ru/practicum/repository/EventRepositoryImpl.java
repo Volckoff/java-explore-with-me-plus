@@ -10,7 +10,7 @@ import ru.practicum.model.Event;
 import ru.practicum.model.QCategory;
 import ru.practicum.model.QEvent;
 import ru.practicum.model.QUser;
-import ru.practicum.model.enums.EventState;
+import ru.practicum.model.EventState;
 
 import java.time.LocalDateTime;
 import java.util.List;

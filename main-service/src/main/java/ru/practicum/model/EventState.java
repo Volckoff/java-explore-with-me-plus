@@ -1,4 +1,4 @@
-package ru.practicum.model.enums;
+package ru.practicum.model;
 
 public enum EventState {
 

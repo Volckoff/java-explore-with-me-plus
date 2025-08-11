@@ -17,12 +17,13 @@ import ru.practicum.model.Category;
 import ru.practicum.model.Event;
 import ru.practicum.model.Location;
 import ru.practicum.model.User;
-import ru.practicum.model.enums.EventState;
+import ru.practicum.model.EventState;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
 import ru.practicum.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,8 @@ public class EventServiceImpl implements EventService {
     private final LocationMapper locationMapper;
 
     private final StatsClient statsClient;
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     //PRIVATE
     @Override
@@ -76,7 +79,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventFullDto updateUserEvent(Long userId, Long eventId, UpdateEventUserRequest dto) {
+    public EventFullDto updateUserEvent(Long userId, Long eventId, UpdateEventUserRequestDto dto) {
         getUserOrThrow(userId);
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
                 .orElseThrow(() -> new NotFoundException("Event", "id", eventId));
@@ -130,7 +133,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventFullDto updateAdminEvent(Long eventId, UpdateEventAdminRequest dto) {
+    public EventFullDto updateAdminEvent(Long eventId, UpdateEventAdminRequestDto dto) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event", "id", eventId));
 
@@ -189,6 +192,7 @@ public class EventServiceImpl implements EventService {
         if (events.isEmpty()) return List.of();
 
         return events.stream()
+                .peek(event -> event.setViews(getViewsForEvent(event.getId())))
                 .map(eventMapper::toShortDto)
                 .collect(Collectors.toList());
     }
@@ -203,6 +207,7 @@ public class EventServiceImpl implements EventService {
         }
 
         saveHit(request);
+        event.setViews(getViewsForEvent(eventId));
 
         return eventMapper.toFullDto(event);
     }
@@ -242,6 +247,20 @@ public class EventServiceImpl implements EventService {
             statsClient.saveHit(hit);
         } catch (Exception e) {
             log.warn("Не удалось записать хит статистики: {}", e.getMessage());
+        }
+    }
+
+    private Long getViewsForEvent(Long eventId) {
+        String start = LocalDateTime.now().minusYears(10).format(FORMATTER);
+        String end = LocalDateTime.now().format(FORMATTER);
+        String uri = "/events/" + eventId;
+
+        try {
+            var listStats = statsClient.getStats(start, end, List.of(uri), true);
+            return listStats.isEmpty() ? 0L : listStats.get(0).getHits();
+        } catch (Exception e) {
+            log.warn("Не удалось получить хит статистики: {}", e.getMessage());
+            return 0L;
         }
     }
 }

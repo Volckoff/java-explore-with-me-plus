@@ -18,7 +18,7 @@ public interface EventMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "confirmedRequests", constant = "0")
-    @Mapping(target = "state", expression = "java(ru.practicum.model.enums.EventState.PENDING)")
+    @Mapping(target = "state", expression = "java(ru.practicum.model.EventState.PENDING)")
     @Mapping(target = "createdOn", expression = "java(mapNow())")
     @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "views", constant = "0L")
@@ -34,7 +34,7 @@ public interface EventMapper {
     @Mapping(target = "initiator", ignore = true)
     @Mapping(target = "views", ignore = true)
     @Mapping(target = "confirmedRequests", ignore = true)
-    void patchFromUser(UpdateEventUserRequest src, @MappingTarget Event event);
+    void patchFromUser(UpdateEventUserRequestDto src, @MappingTarget Event event);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "category", ignore = true)
@@ -45,7 +45,7 @@ public interface EventMapper {
     @Mapping(target = "initiator", ignore = true)
     @Mapping(target = "views", ignore = true)
     @Mapping(target = "confirmedRequests", ignore = true)
-    void patchFromAdmin(UpdateEventAdminRequest src, @MappingTarget Event event);
+    void patchFromAdmin(UpdateEventAdminRequestDto src, @MappingTarget Event event);
 
     default LocalDateTime mapNow() {
         return LocalDateTime.now();

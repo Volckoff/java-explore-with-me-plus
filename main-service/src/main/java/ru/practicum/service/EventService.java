@@ -2,7 +2,7 @@ package ru.practicum.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import ru.practicum.dto.event.*;
-import ru.practicum.model.enums.EventState;
+import ru.practicum.model.EventState;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +16,7 @@ public interface EventService {
 
     EventFullDto getUserEvent(Long userId, Long eventId);
 
-    EventFullDto updateUserEvent(Long userId, Long eventId, UpdateEventUserRequest dto);
+    EventFullDto updateUserEvent(Long userId, Long eventId, UpdateEventUserRequestDto dto);
 
     //admin
     List<EventFullDto> searchAdmin(List<Long> users,
@@ -27,7 +27,7 @@ public interface EventService {
                                    int from,
                                    int size);
 
-    EventFullDto updateAdminEvent(Long eventId, UpdateEventAdminRequest dto);
+    EventFullDto updateAdminEvent(Long eventId, UpdateEventAdminRequestDto dto);
 
     //public
     List<EventShortDto> searchPublic(String text,
