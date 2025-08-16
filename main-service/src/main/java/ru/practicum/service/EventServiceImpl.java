@@ -213,7 +213,7 @@ public class EventServiceImpl implements EventService {
         event.setViews(event.getViews() + 1);
         eventRepository.save(event);
 
-        return buildFullDto(event);
+        return eventMapper.toFullDto(event);
     }
 
     //helper
