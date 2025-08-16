@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.client.StatsClient;
 import ru.practicum.dto.event.*;
@@ -213,7 +214,7 @@ public class EventServiceImpl implements EventService {
         event.setViews(event.getViews() + 1);
         eventRepository.save(event);
 
-        return buildFullDto(event);
+        return eventMapper.toFullDto(event);
     }
 
     //helper
@@ -250,7 +251,7 @@ public class EventServiceImpl implements EventService {
 
     private void checkRangeTime(LocalDateTime start, LocalDateTime end) {
         if (start != null && end != null && start.isAfter(end)) {
-            throw new ConflictException("Начало должно быть до окончания");
+            throw new IllegalArgumentException("Начало должно быть до окончания");
         }
     }
 
