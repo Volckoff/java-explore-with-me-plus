@@ -85,4 +85,16 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleIllegalArgumentException(IllegalArgumentException e) {
+        log.warn("Некорректный аргумент: {}", e.getMessage());
+        return new ApiError(
+                "BAD_REQUEST",
+                "Переданы некорректные данные.",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+    }
 }

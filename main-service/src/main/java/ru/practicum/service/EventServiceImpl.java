@@ -20,7 +20,9 @@ import ru.practicum.model.User;
 import ru.practicum.model.EventState;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
+import ru.practicum.repository.RequestRepository;
 import ru.practicum.repository.UserRepository;
+import ru.practicum.model.RequestStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +38,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final RequestRepository requestRepository;
 
     private final EventMapper eventMapper;
     private final LocationMapper locationMapper;
@@ -55,7 +58,7 @@ public class EventServiceImpl implements EventService {
 
         Event event = eventMapper.toEvent(dto, initiator, category, location);
 
-        return eventMapper.toFullDto(eventRepository.save(event));
+        return buildFullDto(eventRepository.save(event));
     }
 
     @Override
@@ -64,7 +67,7 @@ public class EventServiceImpl implements EventService {
 
         return eventRepository.findAllByInitiatorId(userId, PageRequest.of(from / size, size))
                 .stream()
-                .map(eventMapper::toShortDto)
+                .map(this::buildShortDto)
                 .collect(Collectors.toList());
     }
 
@@ -74,7 +77,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
                 .orElseThrow(() -> new NotFoundException("Event", "id", eventId));
 
-        return eventMapper.toFullDto(event);
+        return buildFullDto(event);
     }
 
     @Override
@@ -111,7 +114,7 @@ public class EventServiceImpl implements EventService {
         }
 
         Event saved = eventRepository.save(event);
-        return eventMapper.toFullDto(saved);
+        return buildFullDto(saved);
     }
 
     //ADMIN
@@ -127,7 +130,7 @@ public class EventServiceImpl implements EventService {
 
         return eventRepository.findEventsByAdminFilters(users, states, categories, rangeStart, rangeEnd, from, size)
                 .stream()
-                .map(eventMapper::toFullDto)
+                .map(this::buildFullDto)
                 .collect(Collectors.toList());
     }
 
@@ -149,8 +152,7 @@ public class EventServiceImpl implements EventService {
         }
 
         if (dto.getLocation() != null) {
-            Location location = locationMapper.toLocation(dto.getLocation());
-            event.setLocation(location);
+            event.setLocation(locationMapper.toLocation(dto.getLocation()));
         }
 
         if (dto.getStateAction() != null) {
@@ -167,7 +169,7 @@ public class EventServiceImpl implements EventService {
         }
 
         Event saved = eventRepository.save(event);
-        return eventMapper.toFullDto(saved);
+        return buildFullDto(saved);
     }
 
     //PUBLIC
@@ -193,7 +195,7 @@ public class EventServiceImpl implements EventService {
 
         return events.stream()
                 .peek(event -> event.setViews(getViewsForEvent(event.getId())))
-                .map(eventMapper::toShortDto)
+                .map(this::buildShortDto)
                 .collect(Collectors.toList());
     }
 
@@ -209,10 +211,26 @@ public class EventServiceImpl implements EventService {
         saveHit(request);
         event.setViews(getViewsForEvent(eventId));
 
+        //return buildFullDto(event);
         return eventMapper.toFullDto(event);
     }
 
     //helper
+
+    private EventFullDto buildFullDto(Event event) {
+        EventFullDto dto = eventMapper.toFullDto(event);
+        Long confirmed = requestRepository.countByEventIdAndStatus(event.getId(), RequestStatus.CONFIRMED);
+        dto.setConfirmedRequests(confirmed);
+        return dto;
+    }
+
+    private EventShortDto buildShortDto(Event event) {
+        EventShortDto dto = eventMapper.toShortDto(event);
+        Long confirmed = requestRepository.countByEventIdAndStatus(event.getId(), RequestStatus.CONFIRMED);
+        dto.setConfirmedRequests(confirmed);
+        return dto;
+    }
+
     private User getUserOrThrow(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User", "id", userId));
