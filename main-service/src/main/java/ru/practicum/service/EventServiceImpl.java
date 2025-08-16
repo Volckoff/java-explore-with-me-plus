@@ -209,14 +209,14 @@ public class EventServiceImpl implements EventService {
         }
 
         saveHit(request);
-        event.setViews(getViewsForEvent(eventId));
 
-        //return buildFullDto(event);
-        return eventMapper.toFullDto(event);
+        event.setViews(event.getViews() + 1);
+        eventRepository.save(event);
+
+        return buildFullDto(event);
     }
 
     //helper
-
     private EventFullDto buildFullDto(Event event) {
         EventFullDto dto = eventMapper.toFullDto(event);
         Long confirmed = requestRepository.countByEventIdAndStatus(event.getId(), RequestStatus.CONFIRMED);

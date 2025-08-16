@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.event.EventRequestStatusUpdateRequestDto;
 import ru.practicum.dto.event.EventRequestStatusUpdateResultDto;
 import ru.practicum.dto.request.ParticipationRequestDto;
+import ru.practicum.model.EventState;
 import ru.practicum.model.RequestStatus;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
@@ -50,6 +51,10 @@ public class RequestServiceImpl implements RequestService {
                 .orElseThrow(() -> new NotFoundException("Request", "UserId", userId));
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Request", "EventId", eventId));
+
+        if (!event.getState().equals(EventState.PUBLISHED)) {
+            throw new ConflictException("Нельзя запросить участие в неопубликованном событии");
+        }
 
         if (event.getInitiator().getId().equals(userId)) {
             throw new ConflictException("Создатель не может запросить участие в своём событии.");
