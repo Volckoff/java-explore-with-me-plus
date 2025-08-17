@@ -40,6 +40,10 @@ public class StatsServiceImpl implements StatsService {
         LocalDateTime startTime = LocalDateTime.parse(start, FORMATTER);
         LocalDateTime endTime = LocalDateTime.parse(end, FORMATTER);
 
+        if (endTime.isBefore(startTime)) {
+            throw new IllegalArgumentException("Начало должно быть до окончания");
+        }
+
         return unique ?
                 statsRepository.findUniqueStats(startTime, endTime, uris)
                 : statsRepository.findAllStats(startTime, endTime, uris);
