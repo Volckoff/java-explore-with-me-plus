@@ -17,8 +17,10 @@ import ru.practicum.exception.NotFoundException;
 import ru.practicum.mapper.CompilationMapper;
 import ru.practicum.model.Compilation;
 import ru.practicum.model.Event;
+import ru.practicum.model.RequestStatus;
 import ru.practicum.repository.CompilationRepository;
 import ru.practicum.repository.EventRepository;
+import ru.practicum.repository.RequestRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -35,6 +37,7 @@ public class CompilationServiceImpl implements CompilationService {
     private final EventRepository eventRepository;
     private final CompilationMapper compilationMapper;
     private final StatsClient statsClient;
+    private final RequestRepository requestRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -61,7 +64,9 @@ public class CompilationServiceImpl implements CompilationService {
             for (EventShortDto eventDto : compilationDto.getEvents()) {
                 String eventUri = "/events/" + eventDto.getId();
                 eventDto.setViews(viewsMap.getOrDefault(eventUri, 0L));
-                eventDto.setConfirmedRequests(0L);
+                Long confirmedRequests = requestRepository.countByEventIdAndStatus(eventDto.getId(),
+                        RequestStatus.CONFIRMED);
+                eventDto.setConfirmedRequests(confirmedRequests);
             }
         }
         return compilationDto;
