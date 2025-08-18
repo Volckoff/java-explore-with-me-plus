@@ -40,6 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    @Transactional
     public void deleteCategory(Long categoryId) {
         log.info("Попытка удаления категории с ID {}", categoryId);
         if (categoryRepository.findById(categoryId).isEmpty()) {

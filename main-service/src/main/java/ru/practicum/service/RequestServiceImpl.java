@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
 public class RequestServiceImpl implements RequestService {
 
