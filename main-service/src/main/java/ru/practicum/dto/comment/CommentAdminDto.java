@@ -19,7 +19,6 @@ public class CommentAdminDto {
     String text;
 
     @NotNull
-    @Size(min = 1, max = 20, message = "Статус должен сожержать не более 20 символов.")
     CommentStatus status;
 
 }

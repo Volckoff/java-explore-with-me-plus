@@ -1,7 +1,9 @@
 package ru.practicum.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.comment.CommentAdminDto;
@@ -82,8 +84,22 @@ public class CommentServiceImpl implements CommentService {
                                         LocalDateTime start,
                                         LocalDateTime end,
                                         int from, int size) {
-        return commentRepository.adminSearch(status, eventId, authorId, start, end, PageRequest.of(from / size, size))
-                .stream()
+
+        Pageable pageable = PageRequest.of(from / size, size);
+
+        Page<Comment> result;
+
+        if (start == null && end == null) {
+            result = commentRepository.searchWithoutDates(status, eventId, authorId, pageable);
+        } else if (start == null) {
+            result = commentRepository.searchWithDates(status, eventId, authorId, LocalDateTime.MIN, end, pageable);
+        } else if (end == null) {
+            result = commentRepository.searchWithDates(status, eventId, authorId, start, LocalDateTime.MAX, pageable);
+        } else {
+            result = commentRepository.searchWithDates(status, eventId, authorId, start, end, pageable);
+        }
+
+        return result.getContent().stream()
                 .map(commentMapper::toDto)
                 .collect(Collectors.toList());
     }
@@ -102,7 +118,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentDto patchCommentByAdmin(Long commentId, CommentAdminDto dto) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new NotFoundException("Cooment", "id", commentId));
+                .orElseThrow(() -> new NotFoundException("Comment", "id", commentId));
 
         if (dto.getStatus() == CommentStatus.PENDING) {
             throw new ConflictException("Целевой статус модерации не может быть PENDING");

@@ -1,5 +1,9 @@
 package ru.practicum.controller.admin;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -9,10 +13,6 @@ import ru.practicum.dto.comment.CommentAdminDto;
 import ru.practicum.dto.comment.CommentDto;
 import ru.practicum.model.CommentStatus;
 import ru.practicum.service.CommentService;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,11 +30,11 @@ public class AdminCommentController {
                                    @RequestParam(required = false) Long eventId,
                                    @RequestParam(required = false) Long authorId,
                                    @RequestParam(required = false)
-                                       @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                                   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
                                    @RequestParam(required = false)
-                                       @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
-                                   @RequestParam(defaultValue = "0") @PositiveOrZero int from,
-                                   @RequestParam(defaultValue = "10") @Positive int size) {
+                                   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
+                                   @RequestParam(defaultValue = "0") @Min(0) int from,
+                                   @RequestParam(defaultValue = "10") @Min(1) @Max(1000) int size) {
         return commentService.adminSearch(status, eventId, authorId, start, end, from, size);
     }
 
@@ -44,7 +44,6 @@ public class AdminCommentController {
                                                 @RequestParam(defaultValue = "CONFIRMED") CommentStatus status) {
         return commentService.getCommentByStatus(eventId, status);
     }
-
 
     @PatchMapping("/{commentId}")
     @ResponseStatus(HttpStatus.OK)
